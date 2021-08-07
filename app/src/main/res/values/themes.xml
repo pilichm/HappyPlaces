@@ -15,12 +15,12 @@
     </style>
 
     <style name="CustomNoActionbarTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:statusBarColor">#2a4d69</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
     
     <style name="customToolbarStyle">
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:colorControlNormal">#FFFFFF</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:colorControlNormal">@color/white</item>
     </style>
 
 </resources>
