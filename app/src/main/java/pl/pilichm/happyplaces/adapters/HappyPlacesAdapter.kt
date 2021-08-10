@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.item_happy_place.view.*
 import pl.pilichm.happyplaces.R
 import pl.pilichm.happyplaces.activities.AddHappyPlaceActivity
 import pl.pilichm.happyplaces.activities.MainActivity
+import pl.pilichm.happyplaces.database.DatabaseHandler
 import pl.pilichm.happyplaces.models.HappyPlaceModel
 
 class HappyPlacesAdapter(
@@ -55,6 +56,13 @@ class HappyPlacesAdapter(
         intent.putExtra(MainActivity.EXTRA_PLACES_DETAILS, items[position])
         activity.startActivityForResult(intent, requestCode)
         notifyItemChanged(position)
+    }
+
+    fun notifyDeleteItem(activity: Activity, position: Int) {
+        val dbHandler = DatabaseHandler(activity)
+        dbHandler.deleteHappyPlace(items[position])
+        items.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     private class HPViewHolder(view: View): RecyclerView.ViewHolder(view)

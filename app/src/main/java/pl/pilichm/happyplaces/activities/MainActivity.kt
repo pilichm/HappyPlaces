@@ -14,6 +14,7 @@ import pl.pilichm.happyplaces.R
 import pl.pilichm.happyplaces.adapters.HappyPlacesAdapter
 import pl.pilichm.happyplaces.database.DatabaseHandler
 import pl.pilichm.happyplaces.models.HappyPlaceModel
+import pl.pilichm.happyplaces.utils.SwipeToDeleteCallback
 import pl.pilichm.happyplaces.utils.SwipeToEditCallback
 
 class MainActivity : AppCompatActivity() {
@@ -66,6 +67,9 @@ class MainActivity : AppCompatActivity() {
         rvHappyPlacesList.setHasFixedSize(true)
         rvHappyPlacesList.adapter = adapter
 
+        /**
+         * Swipe helper for updating items - on swipe right.
+         */
         val editSwipeHandler = object: SwipeToEditCallback(applicationContext){
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = rvHappyPlacesList.adapter as HappyPlacesAdapter
@@ -76,6 +80,20 @@ class MainActivity : AppCompatActivity() {
 
         val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
         editItemTouchHelper.attachToRecyclerView(rvHappyPlacesList)
+
+        /**
+         * Swipe helper for deleting items - on swipe left.
+         */
+        val deleteSwipeHandler = object: SwipeToDeleteCallback(applicationContext){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = rvHappyPlacesList.adapter as HappyPlacesAdapter
+                adapter.notifyDeleteItem(
+                    this@MainActivity, viewHolder.adapterPosition)
+            }
+        }
+
+        val deleteItemTouchHelper = ItemTouchHelper(deleteSwipeHandler)
+        deleteItemTouchHelper.attachToRecyclerView(rvHappyPlacesList)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
