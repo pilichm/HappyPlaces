@@ -6,12 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.pilichm.happyplaces.R
 import pl.pilichm.happyplaces.adapters.HappyPlacesAdapter
 import pl.pilichm.happyplaces.database.DatabaseHandler
 import pl.pilichm.happyplaces.models.HappyPlaceModel
+import pl.pilichm.happyplaces.utils.SwipeToEditCallback
 
 class MainActivity : AppCompatActivity() {
 
@@ -62,6 +65,17 @@ class MainActivity : AppCompatActivity() {
 
         rvHappyPlacesList.setHasFixedSize(true)
         rvHappyPlacesList.adapter = adapter
+
+        val editSwipeHandler = object: SwipeToEditCallback(applicationContext){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = rvHappyPlacesList.adapter as HappyPlacesAdapter
+                adapter.notifyEditItem(
+                    this@MainActivity, viewHolder.adapterPosition, ADD_PLACE_ACTIVITY_RESULT_CODE)
+            }
+        }
+
+        val editItemTouchHelper = ItemTouchHelper(editSwipeHandler)
+        editItemTouchHelper.attachToRecyclerView(rvHappyPlacesList)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

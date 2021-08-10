@@ -38,14 +38,34 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
     private var saveImageToInternalStorage: Uri? = null
     private var mLatitude: Double = 0.0
     private var mLongitude: Double = 0.0
+    private var mHappyPlaceDetails: HappyPlaceModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_happy_place)
 
+        if (intent.hasExtra(MainActivity.EXTRA_PLACES_DETAILS)){
+            mHappyPlaceDetails = intent.getParcelableExtra(MainActivity.EXTRA_PLACES_DETAILS)
+        }
+
         setUpActionBar()
         setUpDialogPicker()
         updateDateInView()
+
+        if (mHappyPlaceDetails!=null){
+            supportActionBar?.title = "Edit Happy Place"
+
+            etTitle.setText(mHappyPlaceDetails!!.title)
+            etDescription.setText(mHappyPlaceDetails!!.description)
+            etDate.setText(mHappyPlaceDetails!!.date)
+            etLocation.setText(mHappyPlaceDetails!!.location)
+            mLatitude = mHappyPlaceDetails!!.latitude
+            mLongitude = mHappyPlaceDetails!!.longitude
+            saveImageToInternalStorage = Uri.parse(mHappyPlaceDetails!!.image)
+            ivPlaceImage.setImageURI(saveImageToInternalStorage)
+            btnSave.text = "UPDATE"
+        }
+
         tvAddImage.setOnClickListener(this)
         btnSave.setOnClickListener(this)
     }
@@ -128,7 +148,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                     }
                     else -> {
                         val happyPlace = HappyPlaceModel(
-                            0,
+                            if (mHappyPlaceDetails==null) 0 else mHappyPlaceDetails!!.id,
                             etTitle.text.toString(),
                             saveImageToInternalStorage.toString(),
                             etDescription.text.toString(),
@@ -139,11 +159,19 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                         )
 
                         val dbHandler = DatabaseHandler(applicationContext)
-                        val result = dbHandler.addHappyPlace(happyPlace)
 
-                        if (result>0){
-                            setResult(Activity.RESULT_OK)
-                            finish()
+                        if (mHappyPlaceDetails==null){
+                            val result = dbHandler.addHappyPlace(happyPlace)
+                            if (result>0){
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        } else {
+                            val result = dbHandler.updateHappyPlace(happyPlace)
+                            if (result>0){
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
                         }
                     }
                 }

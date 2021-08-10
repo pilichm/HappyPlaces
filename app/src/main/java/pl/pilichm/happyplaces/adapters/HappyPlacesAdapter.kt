@@ -1,6 +1,8 @@
 package pl.pilichm.happyplaces.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_happy_place.view.*
 import pl.pilichm.happyplaces.R
+import pl.pilichm.happyplaces.activities.AddHappyPlaceActivity
+import pl.pilichm.happyplaces.activities.MainActivity
 import pl.pilichm.happyplaces.models.HappyPlaceModel
 
 class HappyPlacesAdapter(
@@ -44,6 +48,13 @@ class HappyPlacesAdapter(
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun notifyEditItem(activity: Activity, position: Int, requestCode: Int){
+        val intent = Intent(context, AddHappyPlaceActivity::class.java)
+        intent.putExtra(MainActivity.EXTRA_PLACES_DETAILS, items[position])
+        activity.startActivityForResult(intent, requestCode)
+        notifyItemChanged(position)
     }
 
     private class HPViewHolder(view: View): RecyclerView.ViewHolder(view)
