@@ -8,16 +8,18 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import kotlinx.android.synthetic.main.activity_map.*
 import pl.pilichm.happyplaces.R
+import pl.pilichm.happyplaces.databinding.ActivityMapBinding
 import pl.pilichm.happyplaces.models.HappyPlaceModel
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mHappyPlaceDetail: HappyPlaceModel? = null
+    private lateinit var binding: ActivityMapBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_map)
+        binding = ActivityMapBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (intent.hasExtra(MainActivity.EXTRA_PLACES_DETAILS)){
             mHappyPlaceDetail = intent.getParcelableExtra(MainActivity.EXTRA_PLACES_DETAILS)
@@ -25,11 +27,11 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         if (mHappyPlaceDetail!=null){
-            setSupportActionBar(toolbarMap)
+            setSupportActionBar(binding.toolbarMap)
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
             supportActionBar!!.title = mHappyPlaceDetail!!.title
 
-            toolbarMap.setNavigationOnClickListener {
+            binding.toolbarMap.setNavigationOnClickListener {
                 onBackPressed()
             }
 
@@ -46,6 +48,6 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         googleMap!!.addMarker(MarkerOptions().position(position).title(mHappyPlaceDetail!!.location))
 
         val latLongZoom = CameraUpdateFactory.newLatLngZoom(position, 15f)
-        googleMap!!.animateCamera(latLongZoom)
+        googleMap.animateCamera(latLongZoom)
     }
 }

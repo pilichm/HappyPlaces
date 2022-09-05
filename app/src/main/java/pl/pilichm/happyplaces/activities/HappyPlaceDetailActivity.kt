@@ -2,16 +2,18 @@ package pl.pilichm.happyplaces.activities
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_happy_place_detail.*
-import pl.pilichm.happyplaces.R
+import androidx.appcompat.app.AppCompatActivity
+import pl.pilichm.happyplaces.databinding.ActivityHappyPlaceDetailBinding
 import pl.pilichm.happyplaces.models.HappyPlaceModel
 
 class HappyPlaceDetailActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityHappyPlaceDetailBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_happy_place_detail)
+        binding = ActivityHappyPlaceDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         var happyPlaceItem: HappyPlaceModel? = null
 
@@ -21,18 +23,18 @@ class HappyPlaceDetailActivity : AppCompatActivity() {
         }
 
         if (happyPlaceItem!=null){
-            setSupportActionBar(toolbarHappyPlacesDetail)
+            setSupportActionBar(binding.toolbarHappyPlacesDetail)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.title = happyPlaceItem.title
-            toolbarHappyPlacesDetail.setNavigationOnClickListener {
+            binding.toolbarHappyPlacesDetail.setNavigationOnClickListener {
                 onBackPressed()
             }
 
-            ivPlaceImageDetail.setImageURI(Uri.parse(happyPlaceItem.image))
-            tvDescriptionDetail.text = happyPlaceItem.description
-            tvLocationDetail.text = happyPlaceItem.location
+            binding.ivPlaceImageDetail.setImageURI(Uri.parse(happyPlaceItem.image))
+            binding.tvDescriptionDetail.text = happyPlaceItem.description
+            binding.tvLocationDetail.text = happyPlaceItem.location
 
-            btnViewOnMap.setOnClickListener {
+            binding.btnViewOnMap.setOnClickListener {
                 val intent = Intent(this, MapActivity::class.java)
                 intent.putExtra(MainActivity.EXTRA_PLACES_DETAILS, happyPlaceItem)
                 startActivity(intent)

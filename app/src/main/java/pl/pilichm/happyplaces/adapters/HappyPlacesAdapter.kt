@@ -7,8 +7,9 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_happy_place.view.*
 import pl.pilichm.happyplaces.R
 import pl.pilichm.happyplaces.activities.AddHappyPlaceActivity
 import pl.pilichm.happyplaces.activities.MainActivity
@@ -36,9 +37,14 @@ class HappyPlacesAdapter(
         val item = items[position]
 
         if (holder is HPViewHolder){
-            holder.itemView.ivPlaceImage.setImageURI(Uri.parse(item.image))
-            holder.itemView.tvTitle.text = item.title
-            holder.itemView.tvDescription.text = item.description
+            val ivPlaceImage = holder.itemView.findViewById(R.id.ivPlaceImage) as ImageView
+            val tvTitle = holder.itemView.findViewById(R.id.tvTitle) as TextView
+            val tvDescription = holder.itemView.findViewById(R.id.tvDescription) as TextView
+
+            ivPlaceImage.setImageURI(Uri.parse(item.image))
+            tvTitle.text = item.title
+            tvDescription.text = item.description
+
             holder.itemView.setOnClickListener {
                 if (onClickListener!=null){
                     onClickListener!!.onClick(position, item)
